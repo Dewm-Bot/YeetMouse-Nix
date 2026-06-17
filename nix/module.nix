@@ -7,7 +7,6 @@ let
 
   degToRad = x: x * 0.017453292;
   floatRange = lower: upper: types.addCheck types.float (x: x >= lower && x <= upper);
-      apply = x: if x != null then x else 0.0;
 
   parameterBasePath = "/sys/module/yeetmouse/parameters";
 
@@ -106,7 +105,7 @@ let
             description = "Speed output offset";
           };
           useSmoothing = mkOption {
-            type = bool;
+            type = types.bool;
             default = false;
             description = "Enables the ability to use smooth capping in the Power curve";
             apply = x: if x then "1" else "0";
@@ -473,6 +472,17 @@ in {
       description = "Enable yeetmouse kernel module to add configurable mouse acceleration";
     };
 
+    mutableConfig = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to use a mutable configuration file at /etc/yeetmouse.conf.
+        If enabled, the "Save" button will work without elevation (assuming the user is in the yeetmouse group),
+        and the settings will be applied on boot/device connection.
+        if disabled, saving will default to a user-level configuration file with a systemd service to apply it.
+      '';
+    };
+
     sensitivity = let
       sensitivityValue = floatRange 0.01 10.0;
       anisotropyValue = types.submodule {
@@ -595,6 +605,26 @@ in {
 
     users.groups.yeetmouse = { };
 
+    systemd.tmpfiles.rules = mkIf cfg.mutableConfig [
+      "f /etc/yeetmouse.conf 0664 root yeetmouse -"
+    ];
+
+    systemd.user.services.yeetmouse-autoconfig = {
+      description = "Yeetmouse User Configuration Autoconfig";
+      wantedBy = [ "graphical-session.target" ];
+      partOf = [ "graphical-session.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "yeetmouse-user-config" ''
+          CONF="''${XDG_CONFIG_HOME:-$HOME/.config}/yeetmouse.conf"
+          if [ -f "$CONF" ]; then
+            ${yeetmouse}/bin/yeetmousectl apply "$CONF"
+          fi
+        '';
+        RemainAfterExit = true;
+      };
+    };
+
     services.udev = {
       extraRules = let
         echo = "${pkgs.coreutils}/bin/echo";
@@ -608,6 +638,9 @@ in {
           '';
         in pkgs.writeShellScriptBin "yeetmouseConfig" ''
           ${concatMapStrings (s: (paramToString s) + "\n") params}
+          if [ -f /etc/yeetmouse.conf ]; then
+            ${yeetmouse}/bin/yeetmousectl apply /etc/yeetmouse.conf
+          fi
           ${echo} "1" > /sys/module/yeetmouse/parameters/update
         '';
       in ''

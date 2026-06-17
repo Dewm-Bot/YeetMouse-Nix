@@ -1,6 +1,6 @@
 # Define the compiler and flags
 CXX ?= g++
-CXXFLAGS = -std=c++17 -I . -isystem External
+CXXFLAGS += -std=c++17 -I . -isystem External
 
 # ImPlot has few of these
 IMGUIFLAGS = -Wformat=0 -Wno-format-security

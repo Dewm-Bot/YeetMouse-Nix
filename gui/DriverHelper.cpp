@@ -155,6 +155,10 @@ namespace DriverHelper {
         return SetParameterTy("update", 1);
     }
 
+#include <unistd.h>
+#include <filesystem>
+#include <cstdlib>
+
 #ifndef YEETMOUSECTL_BIN
 #define YEETMOUSECTL_BIN "/usr/bin/yeetmousectl"
 #endif
@@ -163,7 +167,36 @@ namespace DriverHelper {
 #define YEETMOUSE_CONF_FILE "/etc/yeetmouse.conf"
 #endif
 
+    static std::string GetUserConfigPath() {
+        const char* xdg_config = std::getenv("XDG_CONFIG_HOME");
+        if (xdg_config && *xdg_config) {
+            return std::string(xdg_config) + "/yeetmouse.conf";
+        }
+        const char* home = std::getenv("HOME");
+        if (home && *home) {
+            return std::string(home) + "/.config/yeetmouse.conf";
+        }
+        return "";
+    }
+
     bool SavePersistentParameters() {
+        if (access(YEETMOUSE_CONF_FILE, W_OK) == 0) {
+            std::string cmd = std::string(YEETMOUSECTL_BIN) + " save " + YEETMOUSE_CONF_FILE;
+            return std::system(cmd.c_str()) == 0;
+        }
+
+        std::string user_path = GetUserConfigPath();
+        if (!user_path.empty()) {
+            std::error_code ec;
+            std::filesystem::create_directories(std::filesystem::path(user_path).parent_path(), ec);
+            // No need to check ec, if it fails yeetmousectl will report error on save
+
+            std::string cmd = std::string(YEETMOUSECTL_BIN) + " save " + user_path;
+            if (std::system(cmd.c_str()) == 0) {
+                return true;
+            }
+        }
+
         std::string cmd = "pkexec " YEETMOUSECTL_BIN " save " YEETMOUSE_CONF_FILE;
         return std::system(cmd.c_str()) == 0;
     }
@@ -315,7 +348,7 @@ namespace DriverHelper {
 
     bool ParseAllParameters(Parameters &params, char *lutUserData) {
         bool res = true;
-        
+
         res &= GetParameterF("Sensitivity", params.sens);
         res &= GetParameterF("RatioYX", params.ratioYX);
         res &= GetParameterF("OutputCap", params.outCap);
