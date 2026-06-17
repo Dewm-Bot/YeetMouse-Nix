@@ -592,9 +592,14 @@ in {
 
     boot.extraModulePackages = [ yeetmouse ];
     environment.systemPackages = [ yeetmouse ];
+
+    users.groups.yeetmouse = { };
+
     services.udev = {
       extraRules = let
         echo = "${pkgs.coreutils}/bin/echo";
+        chgrp = "${pkgs.coreutils}/bin/chgrp";
+        chmod = "${pkgs.coreutils}/bin/chmod";
         yeetmouseConfig = let
           globalParams = [ cfg.inputCap cfg.outputCap cfg.offset cfg.preScale ];
           params = globalParams ++ cfg.sensitivity ++ cfg.rotation ++ cfg.mode;
@@ -607,6 +612,10 @@ in {
         '';
       in ''
         SUBSYSTEMS=="usb|input|hid", ATTRS{bInterfaceClass}=="03", ATTRS{bInterfaceSubClass}=="01", ATTRS{bInterfaceProtocol}=="02", ATTRS{bInterfaceNumber}=="00", RUN+="${yeetmouseConfig}/bin/yeetmouseConfig"
+        ACTION=="add", SUBSYSTEM=="module", KERNEL=="yeetmouse", RUN+="${pkgs.writeShellScript "yeetmouse-perms" ''
+          ${chgrp} -R yeetmouse /sys/module/yeetmouse/parameters
+          ${chmod} -R g+w /sys/module/yeetmouse/parameters
+        ''}"
       '';
     };
   };

@@ -155,8 +155,17 @@ namespace DriverHelper {
         return SetParameterTy("update", 1);
     }
 
+#ifndef YEETMOUSECTL_BIN
+#define YEETMOUSECTL_BIN "/usr/bin/yeetmousectl"
+#endif
+
+#ifndef YEETMOUSE_CONF_FILE
+#define YEETMOUSE_CONF_FILE "/etc/yeetmouse.conf"
+#endif
+
     bool SavePersistentParameters() {
-        return std::system("pkexec /usr/bin/yeetmousectl save /etc/yeetmouse.conf") == 0;
+        std::string cmd = "pkexec " YEETMOUSECTL_BIN " save " YEETMOUSE_CONF_FILE;
+        return std::system(cmd.c_str()) == 0;
     }
 
     bool WriteParameterF(const std::string &param_name, float value) {

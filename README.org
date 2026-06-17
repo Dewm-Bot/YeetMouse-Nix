@@ -1,3 +1,6 @@
+> [!NOTE]
+> I found it really inefficient relying on nix based configuration for editing yeetmouse, especially across multiple devices and machines. This repo consists of small patches to allow yeetmouse to operate properly within the NixOS ecosystem!
+
 * Description
   *YeetMouse* is a kernel module that allows for fast and customizable mouse acceleration.
   I created *YeetMouse* to build upon the great work of /Klaus Zipfel's/ *[[https://github.com/systemofapwne/leetmouse][LeetMouse]]* and add features such as =Jump= (at first it was mostly it, the Jump acceleration mode).

@@ -1,3 +1,7 @@
+> [!NOTE]
+> I found it really inefficient relying on nix based configuration for editing yeetmouse, especially across multiple devices and machines. This repo consists of small patches to allow yeetmouse to operate properly within the NixOS ecosystem!
+
+
 # YeetMouse NixOS Flake
 
 YeetMouse may be built using this folder's packaged Nix flake.
@@ -17,7 +21,7 @@ in your `flake.nix` file.
   # `nixpkgs` and you might need to change it based on your `nixpkgs`
   # input's name.
   inputs.yeetmouse = {
-    url = "github:AndyFilter/YeetMouse?dir=nix";
+    url = "github:Dewm-Bot/YeetMouse-Nix?dir=nix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
   # <rest of your config> ...

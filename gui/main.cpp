@@ -1105,10 +1105,14 @@ static int OnGui() {
         ImGui::PushStyleColor(ImGuiCol_Button, ImColor::HSV(0.3, 0.75, 0.76).Value);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor::HSV(0.3, 0.7, 0.8).Value);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor::HSV(0.3, 0.67, 0.83).Value);
+#ifndef YEETMOUSE_CONF_FILE
+#define YEETMOUSE_CONF_FILE "/etc/yeetmouse.conf"
+#endif
+
         if (ImGui::Button("Apply + Save", {-1, -1})) {
             params[selected_mode].SaveAll(false);
             if (!DriverHelper::SavePersistentParameters())
-                fprintf(stderr, "Failed to save parameters in /etc/yeetmouse.conf\n");
+                fprintf(stderr, "Failed to save parameters in %s\n", YEETMOUSE_CONF_FILE);
             else {
                 DriverHelper::SaveParameters();
                 functions[0] = functions[selected_mode];

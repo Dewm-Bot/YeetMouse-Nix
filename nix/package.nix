@@ -45,14 +45,16 @@ let
     LD_LIBRARY_PATH = "/run/opengl-driver/lib:${lib.makeLibraryPath buildInputs}";
 
     postBuild = ''
+      make "-j$NIX_BUILD_CORES" -C $sourceRoot/tools/yeetmousectl
       make "-j$NIX_BUILD_CORES" -C $sourceRoot/gui "M=$sourceRoot/gui" \
         "LIBS=-lglfw -lGL" \
-        "CXXFLAGS=-Wno-sign-compare -Wno-unused-function -Wno-return-type -isystem $sourceRoot/gui/External"
+        "CXXFLAGS=-Wno-sign-compare -Wno-unused-function -Wno-return-type -isystem $sourceRoot/gui/External -DYEETMOUSECTL_BIN=\\\"$out/bin/yeetmousectl\\\" -DYEETMOUSE_CONF_FILE=\\\"/etc/yeetmouse.conf\\\""
     '';
 
     postInstall = let
       PATH = [ pkgs.zenity ];
     in /*sh*/''
+      install -Dm755 $sourceRoot/tools/yeetmousectl/yeetmousectl $out/bin/yeetmousectl
       install -Dm755 $sourceRoot/gui/YeetMouseGui $out/bin/yeetmouse
       wrapProgram $out/bin/yeetmouse \
         --prefix PATH : ${lib.makeBinPath PATH}
