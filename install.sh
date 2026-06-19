@@ -165,8 +165,8 @@ if getent group yeetmouse >/dev/null 2>&1 && [[ -d /sys/module/yeetmouse/paramet
 fi
 
 # Apply config immediately if present
-if [[ -f /etc/yeetmouse.conf ]]; then
-	sudo /usr/bin/yeetmousectl apply /etc/yeetmouse.conf || true
+if [[ -f /etc/yeetmouse/settings.conf ]]; then
+	sudo /usr/bin/yeetmousectl apply /etc/yeetmouse/settings.conf || true
 fi
 
 # Enable boot-time config apply on systemd systems
@@ -177,7 +177,7 @@ if command -v systemctl >/dev/null 2>&1 && [[ -d /run/systemd/system ]]; then
 else
 	echo "systemd not detected; installed driver and yeetmousectl, but did not enable a boot-time service."
 	echo "To persist settings across reboot on this system, run:"
-	echo "  /usr/bin/yeetmousectl apply /etc/yeetmouse.conf"
+	echo "  /usr/bin/yeetmousectl apply /etc/yeetmouse/settings.conf"
 	echo "from your init system's startup mechanism."
 fi
 

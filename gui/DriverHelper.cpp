@@ -164,36 +164,20 @@ namespace DriverHelper {
 #endif
 
 #ifndef YEETMOUSE_CONF_FILE
-#define YEETMOUSE_CONF_FILE "/etc/yeetmouse.conf"
+#define YEETMOUSE_CONF_FILE "/etc/yeetmouse/settings.conf"
 #endif
 
-    static std::string GetUserConfigPath() {
-        const char* xdg_config = std::getenv("XDG_CONFIG_HOME");
-        if (xdg_config && *xdg_config) {
-            return std::string(xdg_config) + "/yeetmouse.conf";
-        }
-        const char* home = std::getenv("HOME");
-        if (home && *home) {
-            return std::string(home) + "/.config/yeetmouse.conf";
-        }
-        return "";
-    }
-
     bool SavePersistentParameters() {
-        if (access(YEETMOUSE_CONF_FILE, W_OK) == 0) {
-            std::string cmd = std::string(YEETMOUSECTL_BIN) + " save " + YEETMOUSE_CONF_FILE;
-            return std::system(cmd.c_str()) == 0;
-        }
-
-        std::string user_path = GetUserConfigPath();
-        if (!user_path.empty()) {
-            std::error_code ec;
-            std::filesystem::create_directories(std::filesystem::path(user_path).parent_path(), ec);
-            // No need to check ec, if it fails yeetmousectl will report error on save
-
-            std::string cmd = std::string(YEETMOUSECTL_BIN) + " save " + user_path;
-            if (std::system(cmd.c_str()) == 0) {
-                return true;
+        if (access(YEETMOUSE_CONF_FILE, F_OK) == 0) {
+            if (access(YEETMOUSE_CONF_FILE, W_OK) == 0) {
+                std::string cmd = std::string(YEETMOUSECTL_BIN) + " save " + YEETMOUSE_CONF_FILE;
+                return std::system(cmd.c_str()) == 0;
+            }
+        } else {
+            std::filesystem::path p(YEETMOUSE_CONF_FILE);
+            if (access(p.parent_path().c_str(), W_OK) == 0) {
+                std::string cmd = std::string(YEETMOUSECTL_BIN) + " save " + YEETMOUSE_CONF_FILE;
+                return std::system(cmd.c_str()) == 0;
             }
         }
 

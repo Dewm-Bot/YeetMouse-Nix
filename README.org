@@ -45,7 +45,7 @@
 ** Configuration model
    YeetMouse uses a persistent configuration file:
    #+begin_src sh
-   /etc/yeetmouse.conf
+   /etc/yeetmouse/settings.conf
    #+end_src
 
    Runtime configuration is handled by =yeetmousectl=:
@@ -55,7 +55,7 @@
    yeetmousectl save my-config.conf
    #+end_src
 
-   On systemd-based systems, the installed =yeetmouse.service= automatically applies =/etc/yeetmouse.conf= during boot.
+   On systemd-based systems, the installed =yeetmouse.service= automatically applies =/etc/yeetmouse/settings.conf= during boot.
 
 ** Uninstallation
    If YeetMouse was installed system-wide, use:
@@ -109,7 +109,7 @@
    make pkgarch
    sudo pacman -U yeetmouse*.zst
    sudo modprobe yeetmouse
-   # Optional, if using YeetMouseGUI or the systemd service for local config at /etc/yeetmouse.conf
+   # Optional, if using YeetMouseGUI or the systemd service for local config at /etc/yeetmouse/settings.conf
    sudo systemctl enable --now yeetmouse.service
    sudo usermod -a -G yeetmouse <your user name>
    # Now log out and log in or alternatively restart your system
@@ -149,13 +149,13 @@
    + the DKMS source tree,
    + the kernel module through DKMS,
    + =yeetmousectl=,
-   + the persistent config file in =/etc/yeetmouse.conf=,
+   + the persistent config file in =/etc/yeetmouse/settings.conf=,
    + the systemd service (if systemd is present),
    + and the GUI files if built/installed through the project Makefile.
 
    If systemd is not present, you can still apply the config manually at boot using your init system:
    #+begin_src sh
-   /usr/bin/yeetmousectl apply /etc/yeetmouse.conf
+   /usr/bin/yeetmousectl apply /etc/yeetmouse/settings.conf
    #+end_src
 
    *Uninstallation*
@@ -164,7 +164,7 @@
    sudo yeetmouse-uninstall
    #+end_src
 
-   The uninstaller disables the service, removes installed files, removes the DKMS module, and can optionally remove =/etc/yeetmouse.conf=.
+   The uninstaller disables the service, removes installed files, removes the DKMS module, and can optionally remove =/etc/yeetmouse/settings.conf=.
 
 * Manual compile & insmod
    If you want to compile this module only for testing purposes or development, you do not need to install the whole package to your system.
@@ -180,7 +180,7 @@
 ** Applying a config
    Apply a persistent config file to the running driver:
    #+begin_src sh
-   yeetmousectl apply /etc/yeetmouse.conf
+   yeetmousectl apply /etc/yeetmouse/settings.conf
    #+end_src
 
 ** Dumping current runtime values
@@ -200,10 +200,10 @@
 - Ctrl + Left Click on the parameter box to start inputting the values manually.
 
 ** How are settings preserved between reboots?
-- Settings are stored in =/etc/yeetmouse.conf=.
+- Settings are stored in =/etc/yeetmouse/settings.conf=.
 - To apply them immediately:
   #+begin_src sh
-  yeetmousectl apply /etc/yeetmouse.conf
+  yeetmousectl apply /etc/yeetmouse/settings.conf
   #+end_src
 - On systemd systems, the installed =yeetmouse.service= automatically applies them on boot.
 - To export the currently active settings:

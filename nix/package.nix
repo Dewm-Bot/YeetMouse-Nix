@@ -48,7 +48,7 @@ let
       make "-j$NIX_BUILD_CORES" -C $sourceRoot/tools/yeetmousectl
       make "-j$NIX_BUILD_CORES" -C $sourceRoot/gui "M=$sourceRoot/gui" \
         "LIBS=-lglfw -lGL" \
-        "CXXFLAGS=-Wno-sign-compare -Wno-unused-function -Wno-return-type -isystem $sourceRoot/gui/External -DYEETMOUSECTL_BIN=\\\"$out/bin/yeetmousectl\\\" -DYEETMOUSE_CONF_FILE=\\\"/etc/yeetmouse.conf\\\""
+        "CXXFLAGS=-Wno-sign-compare -Wno-unused-function -Wno-return-type -isystem $sourceRoot/gui/External -DYEETMOUSECTL_BIN=\\\"$out/bin/yeetmousectl\\\" -DYEETMOUSE_CONF_FILE=\\\"/etc/yeetmouse/settings.conf\\\""
     '';
 
     postInstall = let

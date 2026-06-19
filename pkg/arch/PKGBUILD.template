@@ -33,7 +33,7 @@ package_yeetmouse-tools() {
   depends=('yeetmouse-driver-dkms')
   install=yeetmouse-tools.install
 
-  backup=(etc/yeetmouse.conf)
+  backup=(etc/yeetmouse/settings.conf)
 
   cd "$pkgbase-$pkgver"
   make DESTDIR="$pkgdir" install_userspace install_config install_service

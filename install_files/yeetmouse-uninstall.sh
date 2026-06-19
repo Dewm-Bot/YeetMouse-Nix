@@ -4,7 +4,7 @@ set -euo pipefail
 
 DKMS_NAME="yeetmouse-driver"
 SERVICE_NAME="yeetmouse.service"
-CONFIG_FILE="/etc/yeetmouse.conf"
+CONFIG_FILE="/etc/yeetmouse/settings.conf"
 
 USR_BIN_CTL="/usr/bin/yeetmousectl"
 USR_BIN_GUI="/usr/bin/yeetmouse"
@@ -104,6 +104,7 @@ fi
 if [[ -n "$PURGE_CONFIG" && -f "$CONFIG_FILE" ]]; then
 	echo "Removing config file..."
 	rm -f "$CONFIG_FILE"
+	rmdir /etc/yeetmouse 2>/dev/null || true
 else
 	echo "Keeping config file."
 fi

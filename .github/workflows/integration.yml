@@ -28,7 +28,7 @@ jobs:
       - name: Check if necessary files were created
         run: |
           test -f /sys/module/yeetmouse/parameters/AccelerationMode
-          test -f /etc/yeetmouse.conf
+          test -f /etc/yeetmouse/settings.conf
           test -f /usr/lib/systemd/system/yeetmouse.service
           yeetmousectl dump | grep -q "accelMode"
 

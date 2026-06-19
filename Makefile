@@ -149,11 +149,11 @@ remove_uninstaller:
 install_config:
 	@echo -e "\n::\033[34m Installing default configuration\033[0m"
 	@echo "====================================================="
-	install -m 755 -v -d $(DESTDIR)/etc
-	if [ ! -f $(DESTDIR)/etc/yeetmouse.conf ]; then \
-		install -m 644 -v install_files/yeetmouse.conf.sample $(DESTDIR)/etc/yeetmouse.conf; \
+	install -m 755 -v -d $(DESTDIR)/etc/yeetmouse
+	if [ ! -f $(DESTDIR)/etc/yeetmouse/settings.conf ]; then \
+		install -m 644 -v install_files/yeetmouse.conf.sample $(DESTDIR)/etc/yeetmouse/settings.conf; \
 	else \
-		echo "Keeping existing $(DESTDIR)/etc/yeetmouse.conf"; \
+		echo "Keeping existing $(DESTDIR)/etc/yeetmouse/settings.conf"; \
 	fi
 
 install_service:
