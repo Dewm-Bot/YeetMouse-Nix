@@ -1,4 +1,4 @@
-!NOTE]
+> [!NOTE]
 > I found it really inefficient relying on nix based configuration for editing yeetmouse, especially across multiple devices and machines. This repo consists of small patches to allow yeetmouse to operate properly within the NixOS ecosystem!
 
 # Description
