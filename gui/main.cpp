@@ -41,6 +41,10 @@ bool has_privilege = false;
 
 static char LUT_user_data[MAX_LUT_BUF_LEN];
 
+#ifndef YEETMOUSE_CONF_FILE
+#define YEETMOUSE_CONF_FILE "/etc/yeetmouse/settings.conf"
+#endif
+
 void ResetParameters();
 
 #define RefreshDevices() {devices = DriverHelper::DiscoverDevices(); \
@@ -1105,9 +1109,6 @@ static int OnGui() {
         ImGui::PushStyleColor(ImGuiCol_Button, ImColor::HSV(0.3, 0.75, 0.76).Value);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor::HSV(0.3, 0.7, 0.8).Value);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor::HSV(0.3, 0.67, 0.83).Value);
-#ifndef YEETMOUSE_CONF_FILE
-#define YEETMOUSE_CONF_FILE "/etc/yeetmouse/settings.conf"
-#endif
 
         if (ImGui::Button("Apply + Save", {-1, -1})) {
             params[selected_mode].SaveAll(false);
@@ -1225,6 +1226,16 @@ int main() {
     } else {
         // Read driver parameters to a dummy aggregate
         DriverHelper::ParseAllParameters(start_params, LUT_user_data);
+
+        // Load saved configuration from file if it exists, to restore user's profile in GUI
+        std::ifstream config_file(YEETMOUSE_CONF_FILE);
+        if (config_file.is_open()) {
+            bool is_config_h = false;
+            if (auto parsed = ConfigHelper::ImportAny(config_file, LUT_user_data, is_config_h)) {
+                start_params = *parsed;
+            }
+            config_file.close();
+        }
 
         used_mode = start_params.accelMode;
 

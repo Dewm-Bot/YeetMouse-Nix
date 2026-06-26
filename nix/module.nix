@@ -589,6 +589,7 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [ yeetmouseOverlay ];
 
+    boot.kernelModules = [ "yeetmouse" ];
     boot.extraModulePackages = [ yeetmouse ];
     environment.systemPackages = [ yeetmouse ];
 
@@ -622,6 +623,9 @@ in {
         ACTION=="add", SUBSYSTEM=="module", KERNEL=="yeetmouse", RUN+="${pkgs.writeShellScript "yeetmouse-perms" ''
           ${chgrp} -R yeetmouse /sys/module/yeetmouse/parameters
           ${chmod} -R g+w /sys/module/yeetmouse/parameters
+          if [ -s /etc/yeetmouse/settings.conf ]; then
+            ${yeetmouse}/bin/yeetmousectl apply /etc/yeetmouse/settings.conf
+          fi
         ''}"
       '';
     };

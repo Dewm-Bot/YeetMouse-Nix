@@ -159,15 +159,17 @@ install_config:
 install_service:
 	@echo -e "\n::\033[34m Installing systemd service\033[0m"
 	@echo "====================================================="
-	install -m 755 -v -d $(DESTDIR)/usr/lib/{systemd/system,sysusers.d}
+	install -m 755 -v -d $(DESTDIR)/usr/lib/{systemd/system,sysusers.d,modules-load.d}
 	install -m 644 -v install_files/systemd/yeetmouse.service $(DESTDIR)/usr/lib/systemd/system/yeetmouse.service
 	install -m 644 -v install_files/sysusers/yeetmouse.conf   $(DESTDIR)/usr/lib/sysusers.d/yeetmouse.conf
+	install -m 644 -v install_files/modules-load.d/yeetmouse.conf $(DESTDIR)/usr/lib/modules-load.d/yeetmouse.conf
 
 remove_service:
 	@echo -e "\n::\033[34m Removing systemd service\033[0m"
 	@echo "====================================================="
 	rm -f $(DESTDIR)/usr/lib/systemd/system/yeetmouse.service
 	rm -f $(DESTDIR)/usr/lib/sysusers.d/yeetmouse.conf
+	rm -f $(DESTDIR)/usr/lib/modules-load.d/yeetmouse.conf
 
 remove_dkms:
 	@echo -e "\n::\033[34m Removing DKMS files\033[0m"

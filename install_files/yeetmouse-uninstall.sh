@@ -84,6 +84,8 @@ rm -f "$USR_BIN_UNINSTALL"
 rm -f "$DESKTOP_FILE"
 rm -f "$ICON_FILE"
 rm -f "$SYSTEMD_UNIT"
+rm -f "/usr/lib/sysusers.d/yeetmouse.conf"
+rm -f "/usr/lib/modules-load.d/yeetmouse.conf"
 
 if [[ -z "$KEEP_CONFIG" && -z "$PURGE_CONFIG" ]]; then
 	if [[ -f "$CONFIG_FILE" ]]; then
