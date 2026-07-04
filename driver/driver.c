@@ -161,10 +161,12 @@ static bool driver_match(struct input_handler *handler, struct input_dev *dev) {
         return true;
     }
 
-    // handle other non-HID devices, like virtual devices
+    // handle other non-HID devices, like virtual devices, PS/2 trackpoints, I2C / RMI pads, or Bluetooth pointer devices
     // NOTE: keyd actually emulates a USB device with BUS_USB:
     // https://github.com/rvaiya/keyd/blob/7c0aecb8bfd34dc8642bf4eefd2e59c89e61cec3/src/vkbd/uinput.c#L87
-    if (dev->id.bustype == BUS_USB || dev->id.bustype == BUS_VIRTUAL) {
+    if (dev->id.bustype == BUS_USB || dev->id.bustype == BUS_VIRTUAL ||
+        dev->id.bustype == BUS_I8042 || dev->id.bustype == BUS_I2C ||
+        dev->id.bustype == BUS_RMI || dev->id.bustype == BUS_BLUETOOTH) {
         pr_info("found a possible mouse %s", dev->name ?: "unknown");
         return true;
     }
