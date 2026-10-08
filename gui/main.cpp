@@ -496,11 +496,11 @@ static int OnGui() {
 
         ImGui::SeparatorText("Rotation");
         change |= ImGui::SliderFloat("##Adv_AS_Threshold", &params[selected_mode].asThreshold, 0, 179.99,
-                                     u8"Snapping Threshold %0.2f°");
+                                     "Snapping Threshold %0.2f°");
         change |= ImGui::SliderFloat("##Adv_AS_Angle", &params[selected_mode].asAngle, 0, 179.99,
-                                     u8"Snapping Angle %0.2f°");
+                                     "Snapping Angle %0.2f°");
         change |= ImGui::SliderFloat("##Adv_Rotation", &params[selected_mode].rotation, -180, 180,
-                                     u8"Rotation Angle %0.2f°");
+                                     "Rotation Angle %0.2f°");
         if (params[selected_mode].asThreshold > 0)
             ImGui::SetItemTooltip("Rotation is applied after Angle Snapping");
 
